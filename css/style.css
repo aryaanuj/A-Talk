@@ -101,7 +101,7 @@ body
 	display: none !important;
 }
 
-@media(min-width: 0px) and (max-width: 767px)
+@media(min-width: 0px) and (max-width: 640px)
 {
 	div#side-2 {
     width: 100% !important;
