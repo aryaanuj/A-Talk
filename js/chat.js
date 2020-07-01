@@ -12,6 +12,7 @@ loadAllEmoji();
 
 function changeSendIcon(control)
 {
+	showTyping();
 	if(control.value !== '')
 	{
 		document.getElementById('audioicon').setAttribute('style','display:none');
@@ -132,6 +133,36 @@ function StartChat(friendkey, friendname, friendimage)
 		loadChatMessages(chatKey, friendimage);
 	});	
 }
+
+
+function showTyping()
+{
+	var db = firebase.database().ref('chatMessages').child(chatKey);
+	db.on('value', function(chats){
+		var message = '';
+		chats.forEach(function(data){
+			var chat = data.val();
+			var dateTime = chat.dateTime.split(',');
+			var msg = '';
+			if(chat.userId !== currentUserKey)
+			{
+				message = `<div class="row">
+							<div class="col-2 col-sm-2 col-md-1">
+								<img src="${friendimage}" class="rounded-circle chat-pic">
+							</div>
+							<div class="col-6 col-sm-7 col-md-7">
+								<p class="recieve">
+									<span class='text-success'>Typing......</span>
+								</p>
+							</div>
+						</div>`;
+			}
+		});
+		document.getElementById('messages').innerHTML += message;
+		document.getElementById('messages').scrollTo(0, document.getElementById('messages').scrollHeight - document.getElementById('messages').clientHeight);	
+	});
+}
+
 
 function loadChatMessages(chatKey, friendimage)
 {
