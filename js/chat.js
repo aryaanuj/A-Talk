@@ -6,6 +6,84 @@ document.addEventListener('keyup', function(key){
 		SendMessage();
 	}
 });
+
+loadAllEmoji();
+
+
+function changeSendIcon(control)
+{
+	if(control.value !== '')
+	{
+		document.getElementById('audioicon').setAttribute('style','display:none');
+		document.getElementById('sendicon').removeAttribute('style');
+	}
+	else
+	{
+		document.getElementById('sendicon').setAttribute('style','display:none');
+		document.getElementById('audioicon').removeAttribute('style');
+	}
+}
+//############################################
+//Audio Record
+
+let chunks = [];
+let recorder;
+
+var timeout;
+function record(control)
+{
+	
+	let device = navigator.mediaDevices.getUserMedia({audio:true});
+	device.then(stream => {
+
+	if(recorder === undefined)
+	{
+	recorder = new MediaRecorder(stream);
+	recorder.ondataavailable = e => {
+		chunks.push(e.data);
+
+	if(recorder.state === 'inactive')
+	{
+		let blob = new Blob(chunks, {type:'audio/webm'});
+		var reader = new FileReader();
+		reader.addEventListener('load', function(){
+			var chatMessage = {userId:currentUserKey, msg:reader.result, msgType:'audio', dateTime:new Date().toLocaleString()};
+			firebase.database().ref('chatMessages').child(chatKey).push(chatMessage, function(error){
+				if(error) alert(error);
+				else
+				{
+					document.getElementById('txtMessage').value = '';
+					document.getElementById('txtMessage').focus();	
+				}
+			});
+
+		}, false);
+		
+		reader.readAsDataURL(blob);
+	}
+ }
+ 		recorder.start();
+ 		control.setAttribute('class', 'fa fa-stop fa-2x');
+}
+});
+
+	if(recorder !== undefined)
+	{
+		if(control.getAttribute('class').indexOf('stop') !== -1)
+		{
+			recorder.stop();
+			control.setAttribute('class', 'fa fa-microphone fa-2x');
+
+		}
+		else
+		{
+			chunks = [];
+			recorder.start();
+			control.setAttribute('class', 'fa fa-stop fa-2x');
+		}
+	}
+}
+
 //////////////////////////////////////////////////
 function StartChat(friendkey, friendname, friendimage)
 {
@@ -62,6 +140,19 @@ function loadChatMessages(chatKey, friendimage)
 		chats.forEach(function(data){
 			var chat = data.val();
 			var dateTime = chat.dateTime.split(',');
+			var msg = '';
+			if(chat.msgType === 'image')
+			{
+				msg = `<img src='${chat.msg}' class='img-fluid' />`;
+			}
+			else if(chat.msgType === 'audio')
+			{
+				msg = `<audio controls><source src='${chat.msg}' type='video/webm' /></audio>`;
+			}
+			else
+			{
+				msg = chat.msg;
+			}
 			if(chat.userId !== currentUserKey)
 			{
 				message += `<div class="row">
@@ -69,7 +160,7 @@ function loadChatMessages(chatKey, friendimage)
 								<img src="${friendimage}" class="rounded-circle chat-pic">
 							</div>
 							<div class="col-6 col-sm-7 col-md-7">
-								<p class="recieve">${chat.msg}
+								<p class="recieve">${msg}
 									<span class="time float-right" title="${dateTime[0]}">${dateTime[1]}</span>
 								</p>
 							</div>
@@ -78,7 +169,7 @@ function loadChatMessages(chatKey, friendimage)
 			else{
 				message += `<div class="row justify-content-end">
 							<div class="col-6 col-sm-7 col-md-7">
-								<p class="sent float-right">${chat.msg}
+								<p class="sent float-right">${msg}
 									<span class="time float-right" title="${dateTime[0]}">${dateTime[1]}</span>
 								</p>
 							</div>
@@ -89,7 +180,7 @@ function loadChatMessages(chatKey, friendimage)
 			}
 		});
 		document.getElementById('messages').innerHTML = message;
-		document.getElementById('messages').scrollTo(0, document.getElementById('messages').clientHeight);	
+		document.getElementById('messages').scrollTo(0, document.getElementById('messages').scrollHeight - document.getElementById('messages').clientHeight);	
 	});
 }
 
@@ -147,7 +238,7 @@ function hideChatList()
 
 function SendMessage()
 {
-	var chatMessage = {userId:currentUserKey, msg:document.getElementById('txtMessage').value, dateTime:new Date().toLocaleString()};
+	var chatMessage = {userId:currentUserKey, msg:document.getElementById('txtMessage').value, msgType:'normal', dateTime:new Date().toLocaleString()};
 	firebase.database().ref('chatMessages').child(chatKey).push(chatMessage, function(error){
 		if(error) alert(error);
 		else
@@ -156,6 +247,43 @@ function SendMessage()
 			document.getElementById('txtMessage').focus();	
 		}
 	});
+}
+
+//###########################################################
+//send images
+function chooseImage()
+{
+	document.getElementById('imagefile').click();
+}
+
+function sendImage(event)
+{
+	var file = event.files[0];
+	if(!file.type.match("image.*")){
+		alert("Please Choose Image only..");
+	}
+	else{
+		var reader = new FileReader();
+
+		reader.addEventListener('load', function(){
+			
+			var chatMessage = {userId:currentUserKey, msg:reader.result, msgType:'image', dateTime:new Date().toLocaleString()};
+			firebase.database().ref('chatMessages').child(chatKey).push(chatMessage, function(error){
+				if(error) alert(error);
+				else
+				{
+					document.getElementById('txtMessage').value = '';
+					document.getElementById('txtMessage').focus();	
+				}
+			});
+
+		}, false);
+
+		if(file)
+		{
+			reader.readAsDataURL(file);
+		}
+	}
 }
 
 function showFriendList()
@@ -193,6 +321,33 @@ function showFriendList()
 			});
 			document.getElementById("listFriend").innerHTML = lst;
 		});
+}
+
+
+/////#######################################
+//emoji panel 
+
+function loadAllEmoji()
+{
+	var emoji = '';
+	for(var i=128512; i<=128566; i++)
+	{
+		emoji += `<a style="font-size:22px" class='p-2' href="#" onclick="getEmoji(this)">&#${i};</a>`;
+	}
+	document.getElementById("smiley").innerHTML = emoji;
+}
+
+function showEmojiPanel()
+{
+	document.getElementById("emoji").style="display:block";
+}
+function hideEmojiPanel()
+{
+	document.getElementById("emoji").style="display:none";
+}
+function getEmoji(control)
+{
+	document.getElementById('txtMessage').value += control.innerHTML;
 }
 
 ///firebase code here
