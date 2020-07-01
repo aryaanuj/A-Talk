@@ -239,15 +239,19 @@ function hideChatList()
 
 function SendMessage()
 {
-	var chatMessage = {userId:currentUserKey, msg:document.getElementById('txtMessage').value, msgType:'normal', dateTime:new Date().toLocaleString()};
-	firebase.database().ref('chatMessages').child(chatKey).push(chatMessage, function(error){
-		if(error) alert(error);
-		else
-		{
-			document.getElementById('txtMessage').value = '';
-			document.getElementById('txtMessage').focus();	
-		}
-	});
+	var message = document.getElementById('txtMessage').value;
+	if(message !== '')
+	{
+		var chatMessage = {userId:currentUserKey, msg:message, msgType:'normal', dateTime:new Date().toLocaleString()};
+		firebase.database().ref('chatMessages').child(chatKey).push(chatMessage, function(error){
+			if(error) alert(error);
+			else
+			{
+				document.getElementById('txtMessage').value = '';
+				document.getElementById('txtMessage').focus();	
+			}
+		});
+	}
 }
 
 //###########################################################
