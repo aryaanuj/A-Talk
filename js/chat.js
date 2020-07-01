@@ -16,7 +16,7 @@ function changeSendIcon(control)
 	{
 		document.getElementById('audioicon').setAttribute('style','display:none');
 		document.getElementById('sendicon').removeAttribute('style');
-		document.getElementById('sendicon').setAttribute('style', 'cursor:pointer;font-size:22px;');
+		document.getElementById('sendicon').setAttribute('style', 'cursor:pointer; font-size:22px;');
 	}
 	else
 	{
