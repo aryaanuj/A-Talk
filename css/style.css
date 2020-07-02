@@ -136,6 +136,22 @@ body
 	padding-left:15px;
 	padding-right:15px;
 }
+#notiBell
+{
+	background-color: red;
+    border: 1px solid red;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: -2%;
+    font-size: 12px;
+    width: 5%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    margin-left: -2%;
+}
+
+
 @media(min-width: 0px) and (max-width: 640px)
 {
 	div#side-2 {

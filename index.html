@@ -21,8 +21,17 @@
 							<div class="col-1 col-sm-1 col-md-1 d-md-none">
 								<i class="fa fa-arrow-left d-md-none" style="font-size:20px; cursor: pointer;" onclick="hideChatList()"></i>
 							</div>
-							<div class="col-9 col-sm-9 col-md-9">
+							<div class="col-2 col-sm-2 col-md-2">
 								<img id="imgProfile" src="images/defaultprofile.jpg" class="rounded-circle profile-pic">
+							</div>
+							<div class="col-5 col-sm-5 col-md-5">
+								<p id="username" class="font-weight-bold"></p>
+							</div>
+							<div class='col-2 col-sm-2 col-md-2'>
+								<a href="#" class="float-right" data-toggle="modal" data-target="#modalNotificationList" onclick="ShowFriendRequest()">
+									<i class="fa fa-bell icon"></i>
+									<span id="notiBell">0</span>
+								</a>
 							</div>
 							<div class='col-2 col-sm-2 col-md-2'>
 								<div class="dropleft">
@@ -30,9 +39,22 @@
 										<i class="fa fa-ellipsis-v icon" style="cursor:pointer;" onclick="hideChatList()"></i>
 									</span>
 									<div class="dropdown-menu">
+										<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalUserList" onclick="showUserList()" id="userlist">All Users List</a>
 										<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalFriendList" onclick="showFriendList()" id="newchat">New Chat</a>
 										<a href="#" id="linkSignin" onclick="signin()" class="dropdown-item">Sign In</a>
 										<a href="#" id="linkSignout" onclick="signOut()" class="dropdown-item" style="display:none;">Sign Out</a>
+									</div>
+									<div class="modal fade" id="modalUserList">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="card">
+													<div class="card-header">User List
+														<span class="close float-right" data-dismiss="modal" style="cursor:pointer;" id="closebtn">&times;</span>
+													</div>
+													<ul class="list-group list-group-flush" id="listUser"></ul>
+												</div>
+											</div>
+										</div>
 									</div>
 									<div class="modal fade" id="modalFriendList">
 										<div class="modal-dialog">
@@ -42,6 +64,18 @@
 														<span class="close float-right" data-dismiss="modal" style="cursor:pointer;" id="closebtn">&times;</span>
 													</div>
 													<ul class="list-group list-group-flush" id="listFriend"></ul>
+												</div>
+											</div>
+										</div>
+									</div>
+										<div class="modal fade" id="modalNotificationList">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="card">
+													<div class="card-header">Friend Request List
+														<span class="close float-right" data-dismiss="modal" style="cursor:pointer;" id="closebtn">&times;</span>
+													</div>
+													<ul class="list-group list-group-flush" id="listRequest"></ul>
 												</div>
 											</div>
 										</div>
@@ -98,18 +132,10 @@
 								<ul class="nav nav-tabs" id="myTab" role="tablist">
 								  <li class="nav-item">
 								    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#smiley" role="tab" aria-controls="home" aria-selected="true">Smiley</a>
-								  </li>
-								  <li class="nav-item">
-								    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#shape" role="tab" aria-controls="profile" aria-selected="false">Shape</a>
-								  </li>
-								  <li class="nav-item">
-								    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-								  </li>
+								  </li> 
 								</ul>
 								<div class="tab-content" id="myTabContent">
 								  <div class="tab-pane fade show active" id="smiley" role="tabpanel" aria-labelledby="home-tab"></div>
-								  <div class="tab-pane fade" id="shape" role="tabpanel" aria-labelledby="profile-tab">...</div>
-								  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
 								</div>
 							</div>
 						</div>
