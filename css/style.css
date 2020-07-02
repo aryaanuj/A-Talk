@@ -145,8 +145,8 @@ body
     margin-top: 18px;
 	}
 	div#chatpanel {
-    height: 100vh;
+    height: 92vh;
     position: absolute;
-    bottom: 1px;
+    top: 55px;
    }
 }
