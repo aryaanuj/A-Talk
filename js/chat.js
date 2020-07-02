@@ -160,9 +160,6 @@ function loadChatMessages(chatKey, friendimage)
 			if(chat.userId !== currentUserKey)
 			{
 				message += `<div class="row">
-							<div class="col-2 col-sm-2 col-md-1">
-								<img src="${friendimage}" class="rounded-circle chat-pic">
-							</div>
 							<div class="col-6 col-sm-7 col-md-7">
 								<p class="recieve">${msg}
 									<span class="time float-right" title="${dateTime[0]}">${dateTime[1]}</span>
@@ -176,9 +173,6 @@ function loadChatMessages(chatKey, friendimage)
 								<p class="sent float-right">${msg}
 									<span class="time float-right" title="${dateTime[0]}">${dateTime[1]}</span>
 								</p>
-							</div>
-							<div class="col-2 col-sm-2 col-md-1">
-								<img src="${firebase.auth().currentUser.photoURL}" class="rounded-circle chat-pic">
 							</div>
 						</div>`;
 			}
